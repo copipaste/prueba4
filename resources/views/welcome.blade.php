@@ -55,6 +55,44 @@
                 }
                 cantElem++;
             }
+
+            public void eliminarPrim() {
+                if (cantElem == 0) {
+                    return;
+                } else {
+                    for (int i = 0; i < cantElem; i++) {
+                        arreglo[i] = arreglo[i+1];
+                    }
+                    cantElem--;
+                }
+            }
+            public void eliminarUlt() {
+                if (cantElem == 0) {
+                    return;
+                } else {
+                    cantElem--;
+                }
+            }
+
+            public void insertarIEsimo(int x, int i){
+                if (i < 1 || i > cantElem) {
+                    System.out.println("fuera de rango");
+                    return;
+                }else{
+                    if(i == 1){
+                        insertarPrim(x);
+                        return;
+                    }else{
+                        int j = cantElem;
+                        while (j >= i) {
+                            arreglo[j] = arreglo[j-1];
+                            j--;
+                        }
+                        arreglo[j] = x;
+        
+                    }
+                }
+            }
         
             public boolean iguales(){
                 if (cantElem == 0) {
