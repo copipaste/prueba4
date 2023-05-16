@@ -143,11 +143,10 @@
                 if (cantElem == 0) {
                     throw new IllegalArgumentException("lista vacia");
                 } else {
-                    int cantidad = 0;
                     for (int i = 0; i < cantElem; i++) {
-                        if (x == arreglo[i]) cantidad++;
+                        if (x == arreglo[i]) return i+1;
                     }
-                    return cantidad;
+                    return -1;
                 }
             }
         
