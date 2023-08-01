@@ -73,7 +73,7 @@
                 return "";
             }
         
-            //Método que insertar un nodo en el grafo G1, con rótulo name.
+            //Método que insertar un nodo en el grafo
             public void insertarNodo(String nombre) {
                 if (seEncuentra(nombre)) {
                     return;
@@ -86,7 +86,7 @@
                 cantNodos++;
             }
         
-            //Método que inserta un arco en el grafo G1, desde el nodo name1 hasta name2 con un peso del arco igual a valor
+            //Método que inserta un arco en el grafo
             
             public void insertarArco(String nombOrig, String nombDest, int valor) {
                 Nodo pOrigen = buscarNodo(nombOrig);
@@ -139,7 +139,7 @@
                 }
             }
         
-            //Método que devuelve la cantidad de arcos que contiene el grafo G1
+            //Método que devuelve la cantidad de arcos que contiene el grafo
             public int cantidadArcos() {
                 Nodo p = prim;
                 int sum = 0;
@@ -150,7 +150,7 @@
                 return sum;
             }
         
-            // Método que devuelve la cantidad de arcos que llegan al nodo name1.
+            // Método que devuelve la cantidad de arcos que llegan al nodo
             public int cantidadLlegadas(String name1) {
                 Nodo p = prim;
                 int cantidad = 0;
@@ -194,7 +194,7 @@
                 }
             }
         
-            // Método que devuelve el mayor valor de los arcos del grafo G1.
+            // Método que devuelve el mayor valor de los arcos del grafo
             
             public int mayorValor() {
                 Nodo p = prim;
@@ -210,7 +210,7 @@
                 return mayor;
             }
             
-            //------------------------------LOS OTROS 5 METODOS DE NAVEGACION BACKTRACKING-------------------------------------------
+//------------------------------LOS OTROS 5 METODOS DE NAVEGACION BACKTRACKING-------------------------------------------
                 
                 public void mostrarCamino(String name1, String name2){
                     Nodo pOrigen = buscarNodo(name1);
