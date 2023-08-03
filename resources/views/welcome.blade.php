@@ -10,405 +10,473 @@
     <pre>
         <code>
             public class Nodo {
-                public String nombre;
-                public Nodo prox;
-                public Arco prim;
-                public Arco ult;
-                public int cantArcos;
-                
-                public Nodo (String nombre, Nodo prox){
-                    this.nombre =nombre;
-                    this.prox = prox;
-                    this.prim = this.ult=null;
-                    this.cantArcos=0;
-                }
-                
-               public String toString() {
-                  return    nombre;
-               }
-           
-                public void insertarArco(int valor, Nodo pDestino, Arco prox){
-                    if (vacia()) {
-                        prim=ult=new Arco(valor, pDestino,prox);
-                    }else{
-                        ult.prox = ult = new Arco(valor, pDestino,prox);
-                    }
-                    cantArcos++;
-                }
-                public boolean vacia(){
-                    return this.prim == null;
-                }
+                public Nodo ant;
+            public int elem;
+            public Nodo prox;
+        
+            public Nodo (Nodo ant,int elem, Nodo prox){
+                this.ant = ant;
+                this.elem = elem;
+                this.prox = prox;
+            }
         }
-        
-        
-        public class Arco {
-                    public int valor;
-                public Nodo pDestino;
-                public Arco prox;
-                
-                
-                public Arco(int valor, Nodo pDestino,Arco prox){
-                    this.valor =valor;
-                    this.pDestino = pDestino;
-                    this.prox = prox;
-                   
-                }
-                public String toString(){
-                    return "";
-                }
-        }
-        
-        
-        public class Grafo {
-             public Nodo prim;
+
+        public class Lista {
+
+            public Nodo prim;
+            public int cantElem;
             public Nodo ult;
-            public int cantNodos;
         
-            public Grafo() {
-                this.prim = this.ult = null;
-                this.cantNodos = 0;
-            }
-        
-            public String toString() {
-                return "";
-            }
-        
-            //Método que insertar un nodo en el grafo
-            public void insertarNodo(String nombre) {
-                if (seEncuentra(nombre)) {
-                    return;
-                }
-                if (vacia()) {
-                    prim = ult = new Nodo(nombre, null);
-                } else {
-                    ult.prox = ult = new Nodo(nombre, null);
-                }
-                cantNodos++;
-            }
-        
-            //Método que inserta un arco en el grafo
-            
-            public void insertarArco(String nombOrig, String nombDest, int valor) {
-                Nodo pOrigen = buscarNodo(nombOrig);
-                Nodo pDestino = buscarNodo(nombDest);
-                if (pOrigen == null || pDestino == null) {
-                    return;
-                }
-                pOrigen.insertarArco(valor, pDestino, null);
-        
+            public Lista() {
+                prim = ult = null;
+                cantElem = 0;
             }
         
             public boolean vacia() {
-                return prim == null;
+                return (prim == null && ult == null);
             }
         
-            public boolean seEncuentra(String nombre) {
+            public String toString() {
+                String s1 = "[";
                 Nodo p = prim;
+        
                 while (p != null) {
-                    if (p.nombre.equals(nombre)) {
-                        return true;
+                    s1 = s1 + p.elem;
+        
+                    if (p.prox != null) {
+                        s1 = s1 + " ,";
                     }
                     p = p.prox;
                 }
-                return false;
+                s1 = s1 + "]";
+                return s1;
             }
         
-            private Nodo buscarNodo(String nombOrig) {
-                Nodo p = prim;
-                while (p != null) {
-                    if (p.nombre.equals(nombOrig)) {
-                        return p;
-                    }
-                    p = p.prox;
+            public void insertarPrim(int x) {
+                if (vacia()) {
+                    prim = ult = new Nodo(null, x, null);
+                } else {
+                    prim = prim.ant = new Nodo(null, x, prim);
                 }
-                return null;
+                cantElem++;
             }
         
-            //Método que muestra un grafo. Muestra la lista de nodos, para cada nodo la lista de arcos con sus nodos destinos y sus respectivos valores.
-            public void mostrarGrafo() {
-                Nodo p = prim;
-                while (p != null) {
-                    System.out.print(p.nombre + "-> ");
-                    Arco a = p.prim;
-                    while (a != null) {
-                        System.out.print(a.pDestino.nombre + "," + a.valor + ";");
-                        a = a.prox;
-                    }
-                    System.out.println("");
-                    p = p.prox;
+            public void insertarUlt(int x) {
+                if (vacia()) {
+                    prim = ult = new Nodo(null, x, null);
+                } else {
+                    ult = ult.prox = new Nodo(ult, x, null);
                 }
+                cantElem++;
             }
         
-            //Método que devuelve la cantidad de arcos que contiene el grafo
-            public int cantidadArcos() {
-                Nodo p = prim;
-                int sum = 0;
-                while (p != null) {
-                    sum = sum + p.cantArcos;
-                    p = p.prox;
+         
+            public void eliminarPrim() {
+                if (vacia()) {
+                    return;
                 }
-                return sum;
+                if (prim.prox == null) {
+                    prim = ult = null;
+                } else {
+                    prim.prox.ant = null;
+                    prim = prim.prox;
+                }
+                cantElem = cantElem - 1;
+        
             }
         
-            // Método que devuelve la cantidad de arcos que llegan al nodo
-            public int cantidadLlegadas(String name1) {
-                Nodo p = prim;
-                int cantidad = 0;
-                while (p != null) {
-                    Arco a = p.prim;
-                    while (a != null) {
-                        if (a.pDestino.nombre.equals(name1)) {
-                            cantidad++;
+        
+            public void eliminarUlt() {
+                if (this.vacia()) {
+                    return;
+                }
+        
+                if (ult.ant == null) {
+                    prim = ult = null;
+                } else {
+                    ult.ant.prox = null;
+                    ult = ult.ant;
+                }
+                cantElem = cantElem - 1;
+            }
+        
+            public boolean Iguales() {
+                if (vacia()) {
+                    throw new IllegalArgumentException("LISTA VACIA INSERTAR ELEMENTOS");
+                } else {
+                    Nodo p = prim;
+                    while (p.prox != null) {
+                        if (p.elem != p.prox.elem) {
+                            return false;
                         }
-                        a = a.prox;
+                        p = p.prox;
                     }
-                    p = p.prox;
+                    return true;
                 }
-                return cantidad;
             }
-            
-            //Método que muestra los nodos que tienen arcos así mismos.
-            public void mostrarNodosBucle() {
-                Nodo p = prim;
-                
-                while (p != null) {
-                    Arco a = p.prim;
-                    while (a != null) {
-                        if (p.nombre.equals(a.pDestino.nombre)) {
-                            System.out.println(p.nombre + " -> " + p.nombre);
+        
+            public int mayorElem() {
+                if (vacia()) {
+                    throw new IllegalArgumentException("LISTA VACIA");
+                } else {
+                    Nodo p = prim;
+                    int max = 0;
+                    while (p != null) {
+                        if (p.elem > max) {
+                            max = p.elem;
                         }
-                        a = a.prox;
+                        p = p.prox;
                     }
-                    p = p.prox;
+                    return max;
                 }
+        
             }
         
-            //Método que muestra los nodos islas. Nodos islas, son aquellos nodos que no tienen arcos que salen de él, ni arcos que llegan a él.
-            public void mostrarNodosIslas() {
-                Nodo p = prim;
-                while (p != null) {
-                    if (p.cantArcos == 0 && this.cantidadLlegadas(p.nombre) == 0) {
-                        System.out.println(p.nombre);
-                    }
-                    p = p.prox;
-                }
-            }
-        
-            // Método que devuelve el mayor valor de los arcos del grafo
-            
-            public int mayorValor() {
-                Nodo p = prim;
-                int mayor = 0;
-                while (p != null) {
-                    Arco a = p.prim;
-                    while (a != null) {
-                        if(a.valor > mayor) mayor = a.valor;
-                            a = a.prox;
-                    }
-                    p = p.prox;
-                }
-                return mayor;
-            }
-            
-//------------------------------LOS OTROS 5 METODOS DE NAVEGACION BACKTRACKING-------------------------------------------
-                
-                public void mostrarCamino(String name1, String name2){
-                    Nodo pOrigen = buscarNodo(name1);
-                    Nodo pDestino = buscarNodo(name2);
-                    
-                    if(pOrigen == null || pDestino == null) return ;
-                    
-                    LinkedList<Nodo> L1 = new LinkedList();
-                    L1.add(pOrigen);
-                    mostrarCamino(L1,pOrigen,pDestino);
-                    
-                }
-                
-                public void mostrarCamino(LinkedList<Nodo> L1, Nodo pOrigen, Nodo pDestino){
-                    if(seEncuentra(L1,pOrigen)){
-                        return;
-                    }
-                    
-                    if(pOrigen == pDestino) {System.out.println(L1) ;return;}
-                    
-                    Arco p = pOrigen.prim;
-                      while(p != null)
-                      {
-                          L1.add(p.pDestino);
-                          mostrarCamino(L1,p.pDestino,pDestino);
-                          L1.removeLast();
-                          p = p.prox;
-                      }
-                  
-                }
-                public boolean seEncuentra(LinkedList<Nodo> L1,Nodo p){
-                    for(int i = 0; i < L1.size() - 1;i++ )
-                        if(L1.get(i) == p){  
+            public boolean seEncuentra(int x) {
+                if (vacia()) {
+                    return false;
+                } else {
+                    Nodo p = prim;
+                    while (p != null) {
+                        if (x == p.elem) {
                             return true;
                         }
+                        p = p.prox;
+                    }
                     return false;
-                    
                 }
-                
-                
-        //Método que devuelve la cantidad de caminos que existen desde el nodo name1 hasta name2.
+            }
         
-                public int cantidadCaminos(String name1, String name2){
-                    Nodo pOrigen = buscarNodo(name1);
-                    Nodo pDestino = buscarNodo(name2);
-                    
-                    if(pOrigen == null || pDestino == null) return 0;
-                    
-                    LinkedList<Nodo> L1 = new LinkedList();
-                    L1.add(pOrigen);
-                    
-                    return cantidadCaminos(L1,pOrigen,pDestino);
-                    
+            public int frecuencia(int x) {
+                Nodo p = prim;
+                int frecuencia = 0;
+                while (p != null) {
+                    if (p.elem == x) {
+                        frecuencia++;
+                    }
+                    p = p.prox;
                 }
-                
-                public int cantidadCaminos(LinkedList<Nodo> L1, Nodo pOrigen, Nodo pDestino){
-                    int total = 0;
-                    if(seEncuentra(L1,pOrigen)){
-                        return 0;
-                    }
-                    if(pOrigen == pDestino) {
-                        return 1;   
-                    }
-                    
-                    Arco p = pOrigen.prim;
+                return frecuencia;
         
-                      while(p != null)
-                      {
-                          L1.add(p.pDestino);
-                          total = total + cantidadCaminos(L1,p.pDestino,pDestino);
-                         
-                          L1.removeLast();
-                          p = p.prox;
-                      }
-                  return total;
+            }
+        
+            public int indexOf(int x) {
+                Nodo p = prim;
+                int pos = 0;
+                while (p != null) {
+                    if (p.elem == x) {
+                        return pos;
+                    }
+                    pos++;
+                    p = p.prox;
                 }
+                return -1;
+        
+            }
+        
+            //------------------------------------EXTRA-------------------
+            public void insertarIesimo(int x, int i) {
+                if (i < 1 || i > cantElem) {
+                    System.out.println("posicion invalida");
+                    return;
+                } else {
+                    if (i == 1) {
+                        insertarPrim(x);
+                    } else {
+                        Nodo p = prim;
+                        Nodo ap = null;
+                        int pos = 1;
+                        while (p != null) {
+                            if (i == pos) {
+                                this.insertarNodo(x, ap, p);
+                            }
+                            pos++;
+                            ap = p;
+                            p = p.prox;
+                        }
+                    }
+        
+                }
+            }
         
         
-        //Método que muestra todos los caminos desde name1 a name2 con su costos totales de recorrido.
+            public void insertarNodo(int x, Nodo ap, Nodo p) {
+                if (ap == null) {
+                    this.insertarPrim(x);
+                } else if (ap.prox == null) {
+                    this.insertarUlt(x);
+                } else {
+                    ap.prox = p.ant = new Nodo(ap, x, p);
+                    cantElem++;
+                }
+            }
         
+            public void eliminarIesimo(int i) {
+                if (i < 1 || i > cantElem) {
+                    System.out.println("posicion invalida");
+                    return;
+                } else {
         
-                public void mostrarTotalCamino(String name1, String name2){
-                    Nodo pOrigen = buscarNodo(name1);
-                    Nodo pDestino = buscarNodo(name2);
-                    
-                    if(pOrigen == null || pDestino == null) return ;
-                    
-                    LinkedList<Nodo> L1 = new LinkedList();
-                    L1.add(pOrigen);
-                    mostrarTotalCamino(L1,pOrigen,pDestino,0);
-                    
-                }
-                
-                public void mostrarTotalCamino(LinkedList<Nodo> L1, Nodo pOrigen, Nodo pDestino,int Costo){
-                    if(seEncuentra(L1,pOrigen)){
-                        return;
+                    Nodo p = prim;
+                    Nodo ap = null;
+                    int pos = 1;
+                    while (p != null) {
+                        if (i == pos) {
+                            p = this.eliminarNodo(ap, p);
+                        }
+                        pos++;
+                        ap = p;
+                        p = p.prox;
                     }
-                    if(pOrigen == pDestino) {  
-                        System.out.println(L1 +"Costo: "+ Costo) ;
-                        return;
+        
+                }
+            }
+        
+            public Nodo eliminarNodo(Nodo ap, Nodo p) {
+                if (ap == null) {
+                    this.eliminarPrim();
+                    return prim;
+                }
+                if (p.prox == null) {
+                    this.eliminarUlt();
+                    return ult;  
+                }
+                ap.prox = p.prox;
+                p.prox.ant = ap;
+                cantElem--;
+                return ap.prox;
+            }
+        
+            
+            public void insertarLugar(int x) {
+                Nodo ap = null, p = prim;
+                while (p != null && x > p.elem) {
+                    ap = p;
+                    p = p.prox;
+                }
+                this.insertarNodo(x, ap, p);
+            }
+        
+            public void eliminarPares() {
+                Nodo p = prim;
+        
+                while (p != null) {
+                    if (p.elem % 2 == 0) {
+                        p = this.eliminarNodo(p.ant, p);
+                    } else {
+                        p = p.prox;
                     }
-                    Arco p = pOrigen.prim;
-                      while(p != null)
-                      {
-                          L1.add(p.pDestino);
-                          mostrarTotalCamino(L1,p.pDestino,pDestino,Costo + p.valor);
-                          L1.removeLast();
-                          p = p.prox;
-                      }
-                  
+        
                 }
-                
-          //retorna un booleano si existe camino unico         
-               public boolean existeCaminoUnico(String name1, String name2){
-                    Nodo pOrigen = buscarNodo(name1);
-                    Nodo pDestino = buscarNodo(name2);
-                    
-                    if(pOrigen == null || pDestino == null) return false;
-                    
-                    LinkedList<Nodo> L1 = new LinkedList();
-                    L1.add(pOrigen);
-                    int c = this.cantidadCaminos(name1, name2);
-                    return c == 1;
-                }
-               
-                
-            //existe camino de A a B ->boolean   
-               
-                public boolean existeCamino(String name1, String name2){
-                    Nodo pOrigen = buscarNodo(name1);
-                    Nodo pDestino = buscarNodo(name2);
-                    
-                    if(pOrigen == null || pDestino == null) return false;
-                    
-                    LinkedList<Nodo> L1 = new LinkedList();
-                    L1.add(pOrigen);
-                    return existeCamino(L1,pOrigen,pDestino);
-                    
-                }
-                
-                public boolean existeCamino(LinkedList<Nodo> L1, Nodo pOrigen, Nodo pDestino){
-                    if(seEncuentra(L1,pOrigen)){
-                        return false;
+            }
+        
+        }//fin del codigo 
+
+        
+
+        public class Lista {
+    
+            private int[] arreglo;
+            private int cantElem;
+        
+            private int maximo = 50;
+        
+            public Lista() {
+                arreglo = new int[maximo];
+                cantElem = 0;
+            }
+        
+            public String toString(){
+                String A = "[";
+                for (int i = 0; i< cantElem; i++){
+                    A = A + arreglo[i];
+                    if( i != cantElem - 1){
+                        A = A + ", ";
                     }
-                    
-                    if(pOrigen == pDestino) {return true;}
-                    
-                    Arco p = pOrigen.prim;
-                      while(p != null)
-                      {
-                          L1.add(p.pDestino);
-                          if(existeCamino(L1,p.pDestino,pDestino)){
-                              return true;
-                          }
-                          L1.removeLast();
-                          p = p.prox;
-                      }
-                  return false;
                 }
-                
-                // se puede llegar de un nodo A a un nodo B con un limite de costo -> boolean 
-                
-                public boolean existeCaminoConCostoX(String name1, String name2, int costoLimite){
-                    Nodo pOrigen = buscarNodo(name1);
-                    Nodo pDestino = buscarNodo(name2);
-                    
-                    if(pOrigen == null || pDestino == null) return false;
-                    
-                    LinkedList<Nodo> L1 = new LinkedList();
-                    L1.add(pOrigen);
-                    return existeCaminoConCostoX(L1,pOrigen,pDestino,0,costoLimite);
-                    
+                A = A + "]";
+                return A;
+            }
+        
+            public int[] incrementarEnUno(int[] antiguoArreglo){
+                int[] nuevoArreglo = new int[antiguoArreglo.length + 1];
+                for (int i = 0; i < antiguoArreglo.length; i++){
+                    nuevoArreglo[i] = antiguoArreglo[i];
                 }
-                
-                public boolean existeCaminoConCostoX(LinkedList<Nodo> L1, Nodo pOrigen, Nodo pDestino,int costo, int costoLimite){
-                    if(seEncuentra(L1,pOrigen)){
-                        return false;
+                cantElem++;
+                return nuevoArreglo;
+            }
+        
+            public void insertarPrim(int x) {
+        
+                if (cantElem == 0) {
+                    arreglo[0] = x;
+                } else {
+                    for (int i = cantElem; i > 0; i--) {
+                        arreglo[i] = arreglo[i-1];
                     }
+                    arreglo[0] = x;
+                }
+                cantElem++;
+            }
+        
+            public void insertarUlt(int x) {
+                if (cantElem == 0) {
+                    arreglo[0] = x;
+                } else {
+                    arreglo[cantElem] = x;
+                }
+                cantElem++;
+            }
+            
+            
+                public void eliminarPrim() {
+        
+                if (cantElem == 0) {
+                   return;
+                } else {
+                    for (int i = 0; i < this.cantElem ; i++) {
+                        arreglo[i] = arreglo[i+1];
+                    }
+                    cantElem--;
+                }
+                
+            }
+                
+                
+            public void eliminarUlt() {
+                if (cantElem == 0) {
+                   return;
+                } else {
+                   arreglo[cantElem-1] = 0;
+                   cantElem--; 
+                }
+            }
+            
+            
+            
+            
+            public boolean iguales(){
+                if (cantElem == 0) {
+                    throw new IllegalArgumentException("lista vacia");
+                } else {
+                    int pivote = arreglo[0];
+                    for (int i = 0; i < cantElem; i++) {
+                        if (pivote != arreglo[i]) return false;
+                    }
+                    return true;
+                }
+            }
+        
+            public int mayorElemento(){
+                if (cantElem == 0) {
+                    throw new IllegalArgumentException("lista vacia");
+                } else {
+                    int max = 0;
+                    for (int i = 0; i < cantElem; i++) {
+                        if (max < arreglo[i]) max = arreglo[i];
+                    }
+                    return max;
+                }
+            }
+            public boolean seEncuentra(int x){
+                if (cantElem == 0) {
+                    throw new IllegalArgumentException("lista vacia");
+                } else {
+        
+                    for (int i = 0; i < cantElem; i++) {
+                        if (x == arreglo[i]) return true;
+                    }
+                    return false;
+                }
+            }
+            
+            public int frecuencia(int x){
+                if (cantElem == 0) {
+                    throw new IllegalArgumentException("lista vacia");
+                } else {
+                    int cantidad = 0;
+                    for (int i = 0; i < cantElem; i++) {
+                        if (x == arreglo[i]) cantidad++;
+                    }
+                    return cantidad;
+                }
+            }
+                
+                
+             public int indexOf(int x){
+                if (cantElem == 0) {
+                    throw new IllegalArgumentException("lista vacia");
+                } else {
+                    for (int i = 0; i < cantElem; i++) {
+                        if (x == arreglo[i]) return i+1;
+                    }
+                    return -1;
+                }
+            }
+              
              
-                    if(pOrigen == pDestino) {
-                       return(costo <= costoLimite);
-                       }
+             
+            //----------------------------extra---------------------------------
+          public void insertarIesimo(int x, int i) {
+                if (i == 0) {
+                    insertarPrim(x);
+                } else {
                     
-                    Arco p = pOrigen.prim;
-                      while(p != null)
-                      {
-                          L1.add(p.pDestino);
-                         boolean resultado = existeCaminoConCostoX(L1,p.pDestino,pDestino,costo + p.valor,costoLimite);   
-                         if(resultado){
-                             return true;
-                         }
-                         L1.removeLast();
-                          p = p.prox;
-                      }
-                      return false;
-                  
+                    for (int j = this.cantElem; j >= i; j--) {
+                        this.arreglo[j] = this.arreglo[j-1];
+                    }
+                    this.arreglo[i] = x;
+                    this.cantElem++;
                 }
-        } 
+        
+            }
+             
+          
+              public void eliminarTodo(int x) {
+                int i = 0;
+                while (i < this.cantElem) {
+                    if (this.arreglo[i] == x) {
+                        eliminarIesimo(i);
+                    } else {
+                        i++;
+                    }
+                }
+            }
+        
+            public void eliminarIesimo(int i) {
+                if (this.cantElem == 0 || i < 0 || i >= this.cantElem) {
+                    return;
+                }
+                for (int j = i; j < this.cantElem - 1; j++) {
+                    this.arreglo[j] = this.arreglo[j + 1];
+                }
+                this.cantElem--;
+            }
+            public void insertarLugar(int x) {
+                int i = 0;
+                while (i < this.cantElem && this.arreglo[i] < x) {
+                        i++;  
+                }
+                insertarIesimo(x, i);
+            }
+            
+            
+            public void eliminarPares() {
+                int i = 0;
+                while (i < this.cantElem) {
+                    if (this.arreglo[i] % 2 == 0) {
+                        eliminarIesimo(i);
+                    } else {
+                        i++;
+                    }
+                }
+            }
+            
+                
+                
+        }//-------------------FIN CODIGO -------------------------
+        
         </code>
         </pre>
 
